@@ -45,9 +45,9 @@ def pacientes():
 # información: documento, nombre, nacimiento, estatura,
 # peso, tiposangre, edad, imc
 
-app.route("/agregarpaciente")
+@app.route("/agregarpaciente")
 def agregarpaciente():
-    render_template("agregarpaciente.html")
+    return render_template("agregarpaciente.html")
 
 if __name__=="__main__":
     app.run(host="0.0.0.0", port="9000", debug=True)
