@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from flask import Flask,render_template
 import mysql.connector
 
@@ -13,13 +13,13 @@ conexion = mysql.connector.connect(
 cursor = conexion.cursor()
 
 def calcularEdad(fecha):
-    aa = int(fecha[0,4])
-    mm = int(fecha[5,7])
-    dd = int(fecha[8,10])
-    hoy = date()
-    dh = hoy.day()
-    mh = hoy.month()
-    ah = hoy.year()
+    aa = fecha.year
+    mm = fecha.month
+    dd = fecha.day
+    hoy = datetime.now()
+    dh = hoy.day
+    mh = hoy.month
+    ah = hoy.year
     edad = ah-aa
     return edad
 
@@ -31,15 +31,15 @@ def calcularIMC(esta,peso):
 def pacientes():
     sql="SELECT * FROM pacientes"
     cursor.execute(sql)
-    resultado=cursor.fetchall()
+    resulta=cursor.fetchall()
     conexion.commit()
-    for paciente in resultado:
-        paciente.append(calcularEdad(paciente[2]))
-        paciente.append(calcularIMC(paciente[3],paciente[4]))
+    resultado = []
+    for paciente in resulta:
+        paciente = paciente + (calcularEdad(paciente[2]), round(calcularIMC(paciente[3],paciente[4],),2))
+        resultado.append(paciente)
     # Aquí vendrá el backend de consulta
     # de los pacientes (resultado)
-
-    return render_template("pacientes.html, res=resultado")
+    return render_template("pacientes.html", res=resultado)
 # En res, le llegará al template un array donde cada fila
 # sera un paciente y tendrá 8 columnas con la siguiente 
 # información: documento, nombre, nacimiento, estatura,
